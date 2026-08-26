@@ -1,2 +1,7 @@
 class Config:
     DEBUG = True
+
+    MYSQL_HOST = "localhost"
+    MYSQL_USER = "root"
+    MYSQL_PASSWORD = "bhaveshc@123"
+    MYSQL_DATABASE = "outfit_studio"
