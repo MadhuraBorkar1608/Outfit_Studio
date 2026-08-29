@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvClothingDetailsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clothing Details"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <ImageView
+            android:id="@+id/ivClothingDetails"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#E0E0E0"
+            android:contentDescription="Clothing image"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_marginBottom="20dp" />
+
+        <EditText
+            android:id="@+id/etClothingName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Clothing Name"
+            android:inputType="text"
+            android:layout_marginBottom="12dp" />
+
+        <Spinner
+            android:id="@+id/spClothingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etClothingColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Color"
+            android:inputType="text"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/btnUpdateClothing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Clothing"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnDeleteClothing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Clothing" />
+
+        <ProgressBar
+            android:id="@+id/progressClothingDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

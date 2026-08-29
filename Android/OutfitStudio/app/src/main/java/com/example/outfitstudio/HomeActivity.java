@@ -77,13 +77,34 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button btnAppearance = findViewById(R.id.btnAppearance);
+        // Open Appearance Analysis
+        Button btnAppearance =
+                findViewById(R.id.btnAppearance);
 
         btnAppearance.setOnClickListener(v -> {
 
             Intent intent = new Intent(
                     HomeActivity.this,
                     AppearanceActivity.class
+            );
+
+            intent.putExtra(
+                    "user_id",
+                    userId
+            );
+
+            startActivity(intent);
+        });
+
+        // Open My Wardrobe
+        Button btnWardrobe =
+                findViewById(R.id.btnWardrobe);
+
+        btnWardrobe.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeActivity.this,
+                    WardrobeActivity.class
             );
 
             intent.putExtra(

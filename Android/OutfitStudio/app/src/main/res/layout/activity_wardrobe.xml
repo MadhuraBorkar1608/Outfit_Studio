@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Wardrobe Title -->
+        <TextView
+            android:id="@+id/tvWardrobeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Wardrobe"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Add Clothing Button -->
+        <Button
+            android:id="@+id/btnAddClothing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Clothing"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Filter Title -->
+        <TextView
+            android:id="@+id/tvFilterTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filter by Category"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Category Filter -->
+        <Spinner
+            android:id="@+id/spCategoryFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Clothing Items Title -->
+        <TextView
+            android:id="@+id/tvWardrobeItemsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Clothing Items"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Wardrobe Grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wardrobeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp" />
+
+        <!-- Empty Wardrobe Message -->
+        <TextView
+            android:id="@+id/tvEmptyWardrobe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No clothing items found."
+            android:textSize="18sp"
+            android:gravity="center"
+            android:padding="20dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

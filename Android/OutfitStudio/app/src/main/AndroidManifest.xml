@@ -59,6 +59,18 @@
             android:name=".AppearanceActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".WardrobeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AddClothingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ClothingDetailsActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
