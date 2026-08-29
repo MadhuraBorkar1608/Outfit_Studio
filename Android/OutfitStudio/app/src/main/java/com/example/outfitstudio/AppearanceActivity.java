@@ -17,6 +17,9 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import androidx.core.content.FileProvider;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,8 +42,12 @@ public class AppearanceActivity extends AppCompatActivity {
     private TextView tvBodyType;
 
     private int userId;
-    private Uri cameraImageUri;
 
+    private Double chest;
+    private Double waist;
+    private Double hip;
+
+    private Uri cameraImageUri;
     private Uri selectedImageUri;
 
     // Gallery image picker
@@ -327,6 +334,76 @@ public class AppearanceActivity extends AppCompatActivity {
         );
     }
 
+    private void loadBodyMeasurements() {
+
+        if (userId == -1) {
+
+            Toast.makeText(
+                    this,
+                    "User ID not found.",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
+
+        RetrofitClient.getApiService()
+                .getProfile(userId)
+                .enqueue(new retrofit2.Callback<ProfileResponse>() {
+
+                    @Override
+                    public void onResponse(
+                            retrofit2.Call<ProfileResponse> call,
+                            retrofit2.Response<ProfileResponse> response) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().isSuccess()
+                                && response.body().getProfile() != null) {
+
+                            ProfileResponse.Profile profile =
+                                    response.body().getProfile();
+
+                            chest = profile.getChest();
+                            waist = profile.getWaist();
+                            hip = profile.getHip();
+
+                            Log.d(
+                                    "APPEARANCE_MEASUREMENTS",
+                                    "Chest: " + chest
+                                            + ", Waist: " + waist
+                                            + ", Hip: " + hip
+                            );
+
+                        } else {
+
+                            Toast.makeText(
+                                    AppearanceActivity.this,
+                                    "Unable to load body measurements.",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            retrofit2.Call<ProfileResponse> call,
+                            Throwable t) {
+
+                        Log.e(
+                                "APPEARANCE_MEASUREMENTS",
+                                "Failed to load body measurements",
+                                t
+                        );
+
+                        Toast.makeText(
+                                AppearanceActivity.this,
+                                "Unable to connect to server.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,6 +448,8 @@ public class AppearanceActivity extends AppCompatActivity {
                 "User ID: " + userId
         );
 
+        loadBodyMeasurements();
+
         // Select Image
         btnSelectImage.setOnClickListener(v -> {
             galleryLauncher.launch("image/*");
@@ -402,23 +481,154 @@ public class AppearanceActivity extends AppCompatActivity {
                 return;
             }
 
-            progressAppearance.setVisibility(View.VISIBLE);
-
-            btnAnalyze.setEnabled(false);
-
-            new android.os.Handler().postDelayed(() -> {
-
-                progressAppearance.setVisibility(View.GONE);
-
-                btnAnalyze.setEnabled(true);
+            if (userId == -1) {
 
                 Toast.makeText(
                         AppearanceActivity.this,
-                        "Image is ready for analysis.",
+                        "User ID not found.",
                         Toast.LENGTH_SHORT
                 ).show();
 
-            }, 2000);
+                return;
+            }
+
+            if (chest == null || waist == null || hip == null) {
+
+                Toast.makeText(
+                        AppearanceActivity.this,
+                        "Please complete your body measurements in Profile first.",
+                        Toast.LENGTH_LONG
+                ).show();
+
+                return;
+            }
+
+            MultipartBody.Part imagePart =
+                    createImagePart();
+
+            if (imagePart == null) {
+
+                Toast.makeText(
+                        AppearanceActivity.this,
+                        "Unable to prepare the selected image.",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }
+
+            progressAppearance.setVisibility(View.VISIBLE);
+            btnAnalyze.setEnabled(false);
+
+            RequestBody userIdBody =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            String.valueOf(userId)
+                    );
+
+            RequestBody chestBody =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            String.valueOf(chest)
+                    );
+
+            RequestBody waistBody =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            String.valueOf(waist)
+                    );
+
+            RequestBody hipBody =
+                    RequestBody.create(
+                            MediaType.parse("text/plain"),
+                            String.valueOf(hip)
+                    );
+
+            RetrofitClient.getApiService()
+                    .analyzeAppearance(
+                            userIdBody,
+                            imagePart,
+                            chestBody,
+                            waistBody,
+                            hipBody
+                    )
+                    .enqueue(new Callback<AppearanceResponse>() {
+
+                        @Override
+                        public void onResponse(
+                                Call<AppearanceResponse> call,
+                                Response<AppearanceResponse> response) {
+
+                            progressAppearance.setVisibility(View.GONE);
+                            btnAnalyze.setEnabled(true);
+
+                            if (response.isSuccessful()
+                                    && response.body() != null) {
+
+                                displayAppearanceResults(
+                                        response.body()
+                                );
+
+                            } else {
+
+                                String errorMessage =
+                                        "Appearance analysis failed.";
+
+                                if (response.errorBody() != null) {
+
+                                    try {
+
+                                        errorMessage +=
+                                                " HTTP " + response.code();
+
+                                    } catch (Exception e) {
+
+                                        Log.e(
+                                                "APPEARANCE_API",
+                                                "Unable to read error response",
+                                                e
+                                        );
+                                    }
+                                } else {
+
+                                    errorMessage +=
+                                            " HTTP " + response.code();
+                                }
+
+                                Log.e(
+                                        "APPEARANCE_API",
+                                        "HTTP error: " + response.code()
+                                );
+
+                                Toast.makeText(
+                                        AppearanceActivity.this,
+                                        errorMessage,
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(
+                                Call<AppearanceResponse> call,
+                                Throwable t) {
+
+                            progressAppearance.setVisibility(View.GONE);
+                            btnAnalyze.setEnabled(true);
+
+                            Log.e(
+                                    "APPEARANCE_API",
+                                    "Appearance analysis request failed",
+                                    t
+                            );
+
+                            Toast.makeText(
+                                    AppearanceActivity.this,
+                                    "Unable to connect to the server. Please try again.",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
         });
     }
 }

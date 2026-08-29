@@ -45,6 +45,9 @@ public interface ApiService {
     @POST("api/appearance/analyze")
     Call<AppearanceResponse> analyzeAppearance(
             @Part("user_id") RequestBody userId,
-            @Part MultipartBody.Part image
+            @Part MultipartBody.Part image,
+            @Part("chest") RequestBody chest,
+            @Part("waist") RequestBody waist,
+            @Part("hip") RequestBody hip
     );
 }
