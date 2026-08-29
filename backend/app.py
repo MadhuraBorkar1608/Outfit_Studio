@@ -1,9 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from config import Config
 from routes.auth_routes import auth_bp
 from routes.profile_routes import profile_bp
 from routes.appearance_routes import appearance_bp
 from routes.wardrobe_routes import wardrobe_bp
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -20,6 +21,12 @@ def test_api():
         "success": True,
         "message": "Backend is running"
     })
+@app.route("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory(
+        "uploads",
+        filename
+    )
 
 
 if __name__ == "__main__":
