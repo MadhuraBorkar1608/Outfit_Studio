@@ -3,6 +3,7 @@ from config import Config
 from routes.auth_routes import auth_bp
 from routes.profile_routes import profile_bp
 from routes.appearance_routes import appearance_bp
+from routes.wardrobe_routes import wardrobe_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -10,6 +11,7 @@ app.config.from_object(Config)
 app.register_blueprint(auth_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(appearance_bp)
+app.register_blueprint(wardrobe_bp)
 
 
 @app.route("/api/test", methods=["GET"])
