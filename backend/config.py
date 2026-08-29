@@ -1,7 +1,13 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 class Config:
     DEBUG = True
 
-    MYSQL_HOST = "localhost"
-    MYSQL_USER = "root"
-    MYSQL_PASSWORD = "bhaveshc@123"
-    MYSQL_DATABASE = "outfit_studio"
+    MYSQL_HOST = os.getenv("DB_HOST", "localhost")
+    MYSQL_USER = os.getenv("DB_USER", "root")
+    MYSQL_PASSWORD = os.getenv("DB_PASSWORD")
+    MYSQL_DATABASE = os.getenv("DB_NAME", "outfit_studio")
