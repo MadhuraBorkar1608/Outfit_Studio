@@ -6,7 +6,15 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.PUT;
-import retrofit2.http.Path;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Multipart;
+import retrofit2.http.Part;
+
+
+
+
+
 public interface ApiService {
 
     @GET("api/test")
@@ -31,5 +39,12 @@ public interface ApiService {
     Call<ProfileUpdateResponse> updateProfile(
             @Path("user_id") int userId,
             @Body ProfileUpdateRequest request
+    );
+
+    @Multipart
+    @POST("api/appearance/analyze")
+    Call<AppearanceResponse> analyzeAppearance(
+            @Part("user_id") RequestBody userId,
+            @Part MultipartBody.Part image
     );
 }

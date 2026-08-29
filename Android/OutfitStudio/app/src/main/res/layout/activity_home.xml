@@ -31,4 +31,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/btnAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Appearance Analysis"
+        android:layout_marginTop="12dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
